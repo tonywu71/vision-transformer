@@ -5,10 +5,18 @@ import matplotlib.pyplot as plt
 from image_patching import Patches
 
 
-def plot_patches(x_train, patch_size: int, image_size: int) -> None:
+def plot_patches(x_train: tf.Tensor, patch_size: int, image_size: int) -> None:
+    """Note: works with square images only."""
+    
+    n_channels = x_train.shape[-1]
+    
     plt.figure(figsize=(4, 4))
-    image = x_train[np.random.choice(range(x_train.shape[0]))]
-    plt.imshow(image.astype("uint8"))
+    image = x_train[np.random.choice(range(x_train.shape[0]))] # type: ignore
+    
+    if n_channels==1:
+        plt.imshow(image, cmap="gray")
+    else:
+        plt.imshow(image.astype("uint8"))
     plt.axis("off")
 
     resized_image = tf.image.resize(
@@ -24,8 +32,11 @@ def plot_patches(x_train, patch_size: int, image_size: int) -> None:
     plt.figure(figsize=(4, 4))
     for i, patch in enumerate(patches[0]):
         ax = plt.subplot(n, n, i + 1)
-        patch_img = tf.reshape(patch, (patch_size, patch_size, 3))
-        plt.imshow(patch_img.numpy().astype("uint8"))
+        patch_img = tf.reshape(patch, (patch_size, patch_size, n_channels))
+        if n_channels==1:
+            plt.imshow(patch_img.numpy(), cmap="gray")
+        else:
+            plt.imshow(patch_img.numpy().astype("uint8"))
         plt.axis("off")
     
     return
