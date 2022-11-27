@@ -29,7 +29,7 @@ mlp_head_units = [2048, 1024]  # Size of the dense layers of the final classifie
 
 
 
-def run_experiment(model):
+def run_experiment(model, x_train, y_train, x_test, y_test):
     # optimizer = tfa.optimizers.AdamW(
     #     learning_rate=learning_rate, weight_decay=weight_decay
     # )
@@ -91,24 +91,20 @@ def main():
     print(f"x_test shape: {x_test.shape} - y_test shape: {y_test.shape}")
 
 
-    # --- Data Augmentation ---
-    data_augmentation = get_data_augmentation_layer(image_size=image_size, normalization=False)
-
-
     # --- Get model ---
     vit_classifier = create_vit_classifier(input_shape=input_shape,
-                                        num_classes=num_classes,
-                                        image_size=image_size,
-                                        patch_size=patch_size,
-                                        num_patches=num_patches,
-                                        projection_dim=projection_dim,
-                                        n_transformer_layers=n_transformer_layers,
-                                        num_heads=num_heads,
-                                        transformer_units=transformer_units,
-                                        mlp_head_units=mlp_head_units)
+                                           num_classes=num_classes,
+                                           image_size=image_size,
+                                           patch_size=patch_size,
+                                           num_patches=num_patches,
+                                           projection_dim=projection_dim,
+                                           n_transformer_layers=n_transformer_layers,
+                                           num_heads=num_heads,
+                                           transformer_units=transformer_units,
+                                           mlp_head_units=mlp_head_units)
 
     # --- Training ---
-    history = run_experiment(vit_classifier)
+    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
     
     return
 

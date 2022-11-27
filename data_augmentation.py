@@ -9,7 +9,7 @@ def get_data_augmentation_layer(image_size: int, normalization: bool=True) -> ke
     list_layers = []
     
     if normalization:
-        list_layers.append(layers.Normalization())
+        list_layers.append(layers.Normalization()) # TODO: Implement adapt in `create_vit_classifier`
     
     list_layers.extend([
             layers.Resizing(image_size, image_size),
