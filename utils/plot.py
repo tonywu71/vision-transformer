@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-from image_patching import Patches
+from preprocessing.image_patching import Patches
 
 
 def plot_patches(x_train: tf.Tensor, patch_size: int, image_size: int) -> None:

@@ -4,9 +4,9 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
-from data_augmentation import get_data_augmentation_layer
-from image_patching import Patches, PatchEncoder
-from mlp import mlp
+from preprocessing.data_augmentation import get_data_augmentation_layer
+from preprocessing.image_patching import Patches, PatchEncoder
+from model.mlp import mlp
 
 
 def create_vit_classifier(input_shape,

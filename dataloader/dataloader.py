@@ -1,8 +1,11 @@
+from typing import Tuple
+import numpy as np
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.datasets import mnist
 
 
-def load_mnist(normalization: bool=True, one_hot: bool=False):
+def load_mnist(normalization: bool=True, one_hot: bool=False) -> Tuple[Tuple[np.ndarray, np.ndarray],
+                                                                       Tuple[np.ndarray, np.ndarray]]:
     # Loading pre-shuffled MNIST data
     (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 

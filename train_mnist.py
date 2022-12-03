@@ -3,18 +3,17 @@ from datetime import datetime
 
 import tensorflow as tf
 from tensorflow import keras
-# import tensorflow_addons as tfa
 
-from dataloader import load_mnist
-from data_augmentation import get_data_augmentation_layer
-from vision_transformer import create_vit_classifier
+from dataloader.dataloader import load_mnist
+from model.vision_transformer import create_vit_classifier
+from plot.learning_curve import plot_learning_curve
 
 
 # --- Hyperparameters ---
 learning_rate = 0.001
 weight_decay = 0.0001
 batch_size = 256
-num_epochs = 100
+num_epochs = 1
 image_size = 28  # We'll resize input images to this size
 patch_size = 6  # Size of the patches to be extract from the input images
 num_patches = (image_size // patch_size) ** 2
@@ -29,7 +28,7 @@ mlp_head_units = [2048, 1024]  # Size of the dense layers of the final classifie
 
 
 
-def run_experiment(model, x_train, y_train, x_test, y_test):
+def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callbacks.History:
     # optimizer = tfa.optimizers.AdamW(
     #     learning_rate=learning_rate, weight_decay=weight_decay
     # )
@@ -105,8 +104,10 @@ def main():
 
     # --- Training ---
     history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+    plot_learning_curve(history=history)
     
     return
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train Vision Transformer Classifier for MNIST.")

@@ -1,4 +1,4 @@
-from plot import plot_patches
+from utils.plot import plot_patches
 
 def test_plot_patches():
     # ------ Hyperparameters ------

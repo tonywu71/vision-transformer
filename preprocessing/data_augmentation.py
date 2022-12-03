@@ -1,8 +1,5 @@
-import numpy as np
-import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-import tensorflow_addons as tfa
 
 
 def get_data_augmentation_layer(image_size: int, normalization: bool=True) -> keras.layers.Layer:
