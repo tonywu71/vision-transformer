@@ -83,6 +83,6 @@ def test_vit_training_on_subsample_of_mnist():
 
     # --- Training ---
     history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
-    plot_learning_curve(history=history)
+    plot_learning_curve(history=history, filepath="tests/learning_curve_mnist_TEST.png")
     
     return
