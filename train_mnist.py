@@ -29,6 +29,7 @@ mlp_head_units = [2048, 1024]  # Size of the dense layers of the final classifie
 
 
 def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callbacks.History:
+    # --- COMPILE MODEL ---
     # optimizer = tfa.optimizers.AdamW(
     #     learning_rate=learning_rate, weight_decay=weight_decay
     # )
@@ -44,6 +45,8 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
         ],
     )
 
+
+    # --- CHECKPOINTS ---
     checkpoint_filepath = "/checkpoints/mnist"
     checkpoint_callback = keras.callbacks.ModelCheckpoint(
         checkpoint_filepath,
@@ -60,8 +63,10 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
     )
     
     log_dir = f'logs/mnist/' + datetime.now().strftime("%Y%m%d-%H%M%S")
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=5)
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
+    
+    # --- TRAINING ---
     history = model.fit(
         x=x_train,
         y=y_train,
@@ -71,6 +76,8 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
         callbacks=[checkpoint_callback, early_stopping_callback, tensorboard_callback],
     )
 
+
+    # --- EVALUATION ---
     model.load_weights(checkpoint_filepath)
     _, accuracy, top_5_accuracy = model.evaluate(x_test, y_test)
     print(f"Test accuracy: {round(accuracy * 100, 2)}%")
