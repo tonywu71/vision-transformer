@@ -5,38 +5,16 @@ import tensorflow as tf
 from tensorflow import keras
 
 from dataloader.dataloader import load_mnist
+from model.hparams import read_config
 from model.vision_transformer import create_vit_classifier
 from plot.learning_curve import plot_learning_curve
 
 
-# --- Hyperparameters ---
-learning_rate = 1e-4
-weight_decay = 0.0001
-batch_size = 64
-num_epochs = 10
-image_size = 28  # We'll resize input images to this size
-patch_size = 7  # Size of the patches to be extract from the input images
-num_patches = (image_size // patch_size) ** 2
-projection_dim = 256
-dropout = 0.2
-num_heads = 8
-transformer_units = [
-    projection_dim * 2,
-    projection_dim,
-]  # Size of the transformer layers
-n_transformer_layers = 3
-mlp_head_units = [256]  # Size of the dense layers of the final classifier
-
-
-
 def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callbacks.History:
-    # --- COMPILE MODEL ---
-    # optimizer = tfa.optimizers.AdamW(
-    #     learning_rate=learning_rate, weight_decay=weight_decay
-    # )
+    # --- Read config ---
+    config = read_config()
     
-    optimizer = tf.optimizers.Adam(learning_rate=learning_rate)
-
+    optimizer = tf.optimizers.Adam(learning_rate=config["learning_rate"])
     model.compile(
         optimizer=optimizer,
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -71,8 +49,8 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
     history = model.fit(
         x=x_train,
         y=y_train,
-        batch_size=batch_size,
-        epochs=num_epochs,
+        batch_size=config["batch_size"],
+        epochs=config["num_epochs"],
         validation_split=0.2,
         callbacks=[checkpoint_callback, early_stopping_callback, tensorboard_callback],
     )
@@ -88,10 +66,10 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
 
 
 def main():
+    # --- Read config ---
+    config = read_config()
+    
     # --- Prepare the data ---
-    num_classes = 10
-    input_shape = (28, 28, 1)
-
     (x_train, y_train), (x_test, y_test) = load_mnist()
 
     print(f"x_train shape: {x_train.shape} - y_train shape: {y_train.shape}")
@@ -99,17 +77,17 @@ def main():
 
 
     # --- Get model ---
-    vit_classifier = create_vit_classifier(input_shape=input_shape,
-                                           num_classes=num_classes,
-                                           image_size=image_size,
-                                           patch_size=patch_size,
-                                           num_patches=num_patches,
-                                           projection_dim=projection_dim,
-                                           dropout=dropout,
-                                           n_transformer_layers=n_transformer_layers,
-                                           num_heads=num_heads,
-                                           transformer_units=transformer_units,
-                                           mlp_head_units=mlp_head_units)
+    vit_classifier = create_vit_classifier(input_shape=config["input_shape"],
+                                           num_classes=config["num_classes"],
+                                           image_size=config["image_size"],
+                                           patch_size=config["patch_size"],
+                                           num_patches=config["num_patches"],
+                                           projection_dim=config["projection_dim"],
+                                           dropout=config["dropout"],
+                                           n_transformer_layers=config["n_transformer_layers"],
+                                           num_heads=config["num_heads"],
+                                           transformer_units=config["transformer_units"],
+                                           mlp_head_units=config["mlp_head_units"])
 
     # --- Training ---
     history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)

@@ -1,7 +1,7 @@
 ipykernel
+yaml
 pandas
 numpy
 tqdm
 matplotlib
 tensorflow
-tensorflow-addons

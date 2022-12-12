@@ -1,0 +1,17 @@
+num_classes: 1
+input_shape: [28, 28, 1]
+learning_rate: 1e-4
+weight_decay: 0.0001
+batch_size: 64
+num_epochs: 10
+image_size: 28  # We'll resize input images to this size
+patch_size: 7  # Size of the patches to be extract from the input images
+projection_dim: 256
+dropout: 0.2
+num_heads: 8
+transformer_units: [
+    512,
+    256,
+]  # Size of the transformer layers
+n_transformer_layers: 3
+mlp_head_units: [256]  # Size of the dense layers of the final classifier
