@@ -1,3 +1,4 @@
+from keras.datasets.cifar100 import load_data
 from utils.plot import plot_patches
 
 def test_plot_patches():
@@ -6,7 +7,7 @@ def test_plot_patches():
     image_size = 72  # We'll resize input images to this size
     
     # ------ Load dataset ------
-    (x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
+    (x_train, y_train), (x_test, y_test) = load_data()
     
     # ------ Plot a random patch from the train set ------
     try:
