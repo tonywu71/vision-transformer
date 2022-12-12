@@ -10,7 +10,7 @@ def get_data_augmentation_layer(image_size: int, normalization: bool=True) -> ke
     
     list_layers.extend([
             layers.Resizing(image_size, image_size),
-            layers.RandomFlip("horizontal"),
+            # layers.RandomFlip("horizontal"),
             layers.RandomRotation(factor=0.02),
             layers.RandomZoom(
                 height_factor=0.2, width_factor=0.2

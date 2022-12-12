@@ -15,6 +15,7 @@ def create_vit_classifier(input_shape,
                           patch_size: int,
                           num_patches: int,
                           projection_dim: int,
+                          dropout: float,
                           n_transformer_layers: int,
                           num_heads: int,
                           transformer_units: List[int],
@@ -52,10 +53,10 @@ def create_vit_classifier(input_shape,
     # Create a [batch_size, projection_dim] tensor.
     representation = layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
     representation = layers.Flatten()(representation)
-    representation = layers.Dropout(0.5)(representation)
+    representation = layers.Dropout(dropout)(representation)
     
     # Add MLP.
-    features = mlp(representation, hidden_units=mlp_head_units, dropout_rate=0.5)
+    features = mlp(representation, hidden_units=mlp_head_units, dropout_rate=dropout)
     
     # Classify outputs.
     logits = layers.Dense(num_classes)(features)

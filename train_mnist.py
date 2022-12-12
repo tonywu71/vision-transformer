@@ -10,21 +10,22 @@ from plot.learning_curve import plot_learning_curve
 
 
 # --- Hyperparameters ---
-learning_rate = 0.001
+learning_rate = 1e-4
 weight_decay = 0.0001
-batch_size = 256
-num_epochs = 1
+batch_size = 64
+num_epochs = 1 # TEST ONLY
 image_size = 28  # We'll resize input images to this size
-patch_size = 6  # Size of the patches to be extract from the input images
+patch_size = 7  # Size of the patches to be extract from the input images
 num_patches = (image_size // patch_size) ** 2
-projection_dim = 64
-num_heads = 4
+projection_dim = 256
+dropout = 0.2
+num_heads = 8
 transformer_units = [
     projection_dim * 2,
     projection_dim,
 ]  # Size of the transformer layers
-n_transformer_layers = 8
-mlp_head_units = [2048, 1024]  # Size of the dense layers of the final classifier
+n_transformer_layers = 3
+mlp_head_units = [256]  # Size of the dense layers of the final classifier
 
 
 
@@ -104,6 +105,7 @@ def main():
                                            patch_size=patch_size,
                                            num_patches=num_patches,
                                            projection_dim=projection_dim,
+                                           dropout=dropout,
                                            n_transformer_layers=n_transformer_layers,
                                            num_heads=num_heads,
                                            transformer_units=transformer_units,
