@@ -91,7 +91,7 @@ def main():
 
     # --- Training ---
     history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
-    plot_learning_curve(history=history, filepath="figs/learning_curve_mnist.png")
+    plot_learning_curve(history=history, filepath="figs/learning_curve_mnist-VIT.png")
     
     return
 
