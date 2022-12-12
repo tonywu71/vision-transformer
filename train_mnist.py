@@ -13,7 +13,7 @@ from plot.learning_curve import plot_learning_curve
 learning_rate = 1e-4
 weight_decay = 0.0001
 batch_size = 64
-num_epochs = 1 # TEST ONLY
+num_epochs = 10
 image_size = 28  # We'll resize input images to this size
 patch_size = 7  # Size of the patches to be extract from the input images
 num_patches = (image_size // patch_size) ** 2
@@ -48,7 +48,7 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
 
 
     # --- CHECKPOINTS ---
-    checkpoint_filepath = "/checkpoints/mnist"
+    checkpoint_filepath = "./checkpoints/mnist"
     checkpoint_callback = keras.callbacks.ModelCheckpoint(
         checkpoint_filepath,
         monitor="val_accuracy",
@@ -73,7 +73,7 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
         y=y_train,
         batch_size=batch_size,
         epochs=num_epochs,
-        validation_split=0.1,
+        validation_split=0.2,
         callbacks=[checkpoint_callback, early_stopping_callback, tensorboard_callback],
     )
 
