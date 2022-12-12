@@ -98,4 +98,4 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train Vision Transformer Classifier for MNIST.")
-    main()    
+    main()
