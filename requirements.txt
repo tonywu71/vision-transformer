@@ -1,5 +1,5 @@
 ipykernel
-yaml
+pyyaml
 pandas
 numpy
 tqdm
