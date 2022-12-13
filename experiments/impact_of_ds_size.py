@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 
 # LIST_N_EXAMPLES_TRAIN = list(range(10000, 60001, 10000))
 LIST_N_EXAMPLES_TRAIN = [1000]
+NUM_EPOCHS_DEFAULT = 5
 FIG_DIRPATH = Path("figs/experiments")
 FIG_DIRPATH.mkdir(parents=True, exist_ok=True)
 
@@ -41,10 +42,10 @@ def _plot_and_save_history(history_per_n_examples: Dict[int, List[int]], filepat
 def main():
     # --- Read config ---
     config = read_config()
+    config["num_epochs"] = NUM_EPOCHS_DEFAULT # to accelerate the experiment
     
     
     # --- Get data ---
-    # (x_train, y_train), (x_test, y_test) = load_mnist()
     ds_train, ds_test = load_mnist_dataset(batch=False)
     ds_test = ds_test.batch(config["batch_size"]).cache().prefetch(tf.data.AUTOTUNE)
     

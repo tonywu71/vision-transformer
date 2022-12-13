@@ -4,13 +4,13 @@ from datetime import datetime
 import tensorflow as tf
 from tensorflow import keras
 
-from dataloader.dataloader import load_mnist
+from dataloader.dataloader import load_mnist_dataset
 from model.hparams import read_config
 from model.vision_transformer import create_vit_classifier
 from plot.learning_curve import plot_learning_curve
 
 
-def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callbacks.History:
+def run_experiment(model, ds_train, ds_test) -> tf.keras.callbacks.History:
     # --- Read config ---
     config = read_config()
     
@@ -18,10 +18,7 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
     model.compile(
         optimizer=optimizer,
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-        metrics=[
-            keras.metrics.SparseCategoricalAccuracy(name="accuracy"),
-            keras.metrics.SparseTopKCategoricalAccuracy(5, name="top-5-accuracy"),
-        ],
+        metrics=[keras.metrics.SparseCategoricalAccuracy(name="accuracy")]
     )
 
 
@@ -47,20 +44,17 @@ def run_experiment(model, x_train, y_train, x_test, y_test) -> tf.keras.callback
     
     # --- TRAINING ---
     history = model.fit(
-        x=x_train,
-        y=y_train,
-        batch_size=config["batch_size"],
+        ds_train,
         epochs=config["num_epochs"],
-        validation_split=0.2,
+        validation_data=ds_test,
         callbacks=[checkpoint_callback, early_stopping_callback, tensorboard_callback],
     )
 
 
     # --- EVALUATION ---
     model.load_weights(checkpoint_filepath)
-    _, accuracy, top_5_accuracy = model.evaluate(x_test, y_test)
+    _, accuracy = model.evaluate(ds_test)
     print(f"Test accuracy: {round(accuracy * 100, 2)}%")
-    print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
 
     return history
 
@@ -70,10 +64,7 @@ def main():
     config = read_config()
     
     # --- Prepare the data ---
-    (x_train, y_train), (x_test, y_test) = load_mnist()
-
-    print(f"x_train shape: {x_train.shape} - y_train shape: {y_train.shape}")
-    print(f"x_test shape: {x_test.shape} - y_test shape: {y_test.shape}")
+    ds_train, ds_test = load_mnist_dataset(batch_size=config["batch_size"])
 
 
     # --- Get model ---
@@ -90,7 +81,7 @@ def main():
                                            mlp_head_units=config["mlp_head_units"])
 
     # --- Training ---
-    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+    history = run_experiment(vit_classifier, ds_train, ds_test)
     plot_learning_curve(history=history, filepath="figs/learning_curve_mnist-VIT.png")
     
     return
