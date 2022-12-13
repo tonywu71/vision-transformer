@@ -4,18 +4,8 @@ import tensorflow as tf
 
 from dataloader.dataloader import load_mnist_dataset
 from model.hparams import read_config
-from preprocessing.data_augmentation import get_data_augmentation_layer
+from model.cnn import get_cnn_model
 from plot.learning_curve import plot_learning_curve
-
-
-def get_cnn_model() -> tf.keras.Model:
-    model = tf.keras.models.Sequential([
-        get_data_augmentation_layer(image_size=28, normalization=False),
-        tf.keras.layers.Flatten(input_shape=(28, 28)),
-        tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dense(10)
-        ])
-    return model
 
 
 def _run_experiment(model, ds_train: tf.data.Dataset, ds_test: tf.data.Dataset) -> tf.keras.callbacks.History:
