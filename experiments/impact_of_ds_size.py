@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 
 # LIST_N_EXAMPLES_TRAIN = list(range(10000, 60001, 10000))
-LIST_N_EXAMPLES_TRAIN = [1000]
+LIST_N_EXAMPLES_TRAIN = [1000, 2000]
 NUM_EPOCHS_DEFAULT = 5
 FIG_DIRPATH = Path("figs/experiments")
 FIG_DIRPATH.mkdir(parents=True, exist_ok=True)
@@ -28,11 +28,11 @@ FIG_DIRPATH.mkdir(parents=True, exist_ok=True)
 
 def _plot_and_save_history(history_per_n_examples: Dict[int, List[int]], filepath: str,
                            title: Optional[str]=None):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(8, 5))
     df = pd.DataFrame(history_per_n_examples)
     if title is None:
         title = "Learning curve"
-    df.plot(ax=ax, xlabel="Epochs", ylabel="Validation loss (cross-entropy)", title=title)
+    df.plot(ax=ax, xlabel="Epochs", ylabel="Validation loss (cross-entropy)", title=title, legend=False)
     fig.legend(title="Number of examples in the train set")
     fig.tight_layout()
     fig.savefig(filepath)
