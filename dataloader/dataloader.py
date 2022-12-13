@@ -34,7 +34,7 @@ def _normalize_img(image, label):
   return tf.cast(image, tf.float32) / 255., label # type: ignore
 
 
-def load_mnist_dataset() -> Tuple[tf.data.Dataset, tf.data.Dataset]:
+def load_mnist_dataset(batch: bool=True) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
     (ds_train, ds_test), ds_info = tfds.load(
         'mnist',
         split=['train', 'test'],
@@ -47,14 +47,16 @@ def load_mnist_dataset() -> Tuple[tf.data.Dataset, tf.data.Dataset]:
         _normalize_img, num_parallel_calls=tf.data.AUTOTUNE)
     ds_train = ds_train.cache()
     ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples)
-    ds_train = ds_train.batch(128)
-    ds_train = ds_train.prefetch(tf.data.AUTOTUNE)
+    if batch:
+        ds_train = ds_train.batch(128)
+        ds_train = ds_train.prefetch(tf.data.AUTOTUNE)
 
 
     ds_test = ds_test.map(
         _normalize_img, num_parallel_calls=tf.data.AUTOTUNE)
-    ds_test = ds_test.batch(128)
-    ds_test = ds_test.cache()
-    ds_test = ds_test.prefetch(tf.data.AUTOTUNE)
+    if batch:
+        ds_test = ds_test.batch(128)
+        ds_test = ds_test.cache()
+        ds_test = ds_test.prefetch(tf.data.AUTOTUNE)
     
     return ds_train, ds_test

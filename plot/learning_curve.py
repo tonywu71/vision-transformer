@@ -13,3 +13,4 @@ def plot_learning_curve(history: tf.keras.callbacks.History, filepath: str):
     fig.savefig(filepath)
     
     logger.info("Successfully generated and saved training history figures.")
+    return
