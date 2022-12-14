@@ -17,6 +17,10 @@ from model.vision_transformer import create_vit_classifier
 from train_CNN import get_cnn_model
 
 import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+sns.set_theme()
 
 
 # LIST_N_EXAMPLES_TRAIN = list(range(10000, 60001, 10000))
@@ -28,15 +32,41 @@ FIG_DIRPATH.mkdir(parents=True, exist_ok=True)
 
 def _plot_and_save_history(history_per_n_examples: Dict[int, List[int]], filepath: str,
                            title: Optional[str]=None):
-    fig, ax = plt.subplots(figsize=(8, 5))
     df = pd.DataFrame(history_per_n_examples)
+    
+    fig, ax = plt.subplots(figsize=(8, 5))
+    
     if title is None:
         title = "Learning curve"
     df.plot(ax=ax, xlabel="Epochs", ylabel="Validation loss (cross-entropy)", title=title, legend=False)
-    fig.legend(title="Number of examples in the train set")
+    ax.legend("Trainset size")
+    
+    fig.suptitle("Impact of the number of examples in the train set on model performance")
+    fig.tight_layout()
+    fig.savefig(filepath)
+    
+    return
+
+
+def _plot_comparison_learning_curves(history_1: Dict[int, List[int]], history_2: Dict[int, List[int]],
+                                     title_1: str, title_2: str, filepath: str):
+    fig, axis = plt.subplots(1, 2, figsize=(2*8, 5), sharey=True)
+    
+    df_1 = pd.DataFrame(history_1)
+    df_2 = pd.DataFrame(history_2)
+        
+    df_1.plot(ax=axis[0], xlabel="Epochs", ylabel="Validation loss (cross-entropy)", title=title_1, legend=False)
+    axis[0].legend("Trainset size")
+    
+    df_2.plot(ax=axis[1], xlabel="Epochs", ylabel="Validation loss (cross-entropy)", title=title_2, legend=False)
+    axis[1].legend("Trainset size")
+    
+    fig.suptitle("Impact of the number of examples in the train set on model performance")
+    
     fig.tight_layout()
     fig.savefig(filepath)
     return
+    
 
 
 def main():
@@ -103,10 +133,13 @@ def main():
     
     
     # --- Plot ---
-    _plot_and_save_history(history_vit, filepath=FIG_DIRPATH/"learning_curve_wrt_ds_size-VIT.png", # type: ignore
-                           title="Impact of the dataset size on how the VIT learning")
-    _plot_and_save_history(history_cnn, filepath=FIG_DIRPATH/"learning_curve_wrt_ds_size-CNN.png", # type: ignore
-                           title="Impact of the dataset size on how the CNN learning")
+    # _plot_and_save_history(history_vit, filepath=FIG_DIRPATH/"learning_curve_wrt_ds_size-VIT.png", # type: ignore
+    #                        title="Impact of the dataset size on how the VIT learning")
+    # _plot_and_save_history(history_cnn, filepath=FIG_DIRPATH/"learning_curve_wrt_ds_size-CNN.png", # type: ignore
+    #                        title="Impact of the dataset size on how the CNN learning")
+    _plot_comparison_learning_curves(history_1=history_vit, history_2=history_cnn,
+                                     title_1="Learning curve for VIT", title_2="Learning curve for CNN",
+                                     filepath=FIG_DIRPATH/"learning_curve_comparison.png") # type: ignore
     
     return
 
