@@ -23,8 +23,7 @@ import seaborn as sns
 sns.set_theme()
 
 
-# LIST_N_EXAMPLES_TRAIN = list(range(10000, 60001, 10000))
-LIST_N_EXAMPLES_TRAIN = [1000, 2000]
+LIST_N_EXAMPLES_TRAIN = list(range(1000, 3001, 1000))
 NUM_EPOCHS_DEFAULT = 5
 FIG_DIRPATH = Path("figs/experiments")
 FIG_DIRPATH.mkdir(parents=True, exist_ok=True)
@@ -56,10 +55,10 @@ def _plot_comparison_learning_curves(history_1: Dict[int, List[int]], history_2:
     df_2 = pd.DataFrame(history_2)
         
     df_1.plot(ax=axis[0], xlabel="Epochs", ylabel="Validation loss (cross-entropy)", title=title_1, legend=False)
-    axis[0].legend("Trainset size")
+    axis[0].legend(title="Trainset size")
     
     df_2.plot(ax=axis[1], xlabel="Epochs", ylabel="Validation loss (cross-entropy)", title=title_2, legend=False)
-    axis[1].legend("Trainset size")
+    axis[1].legend(title="Trainset size")
     
     fig.suptitle("Impact of the number of examples in the train set on model performance")
     
@@ -130,13 +129,11 @@ def main():
             epochs=config["num_epochs"],
             validation_data=ds_test,
         ).history["val_loss"]
+        
+        del(ds_train_subset)
     
     
     # --- Plot ---
-    # _plot_and_save_history(history_vit, filepath=FIG_DIRPATH/"learning_curve_wrt_ds_size-VIT.png", # type: ignore
-    #                        title="Impact of the dataset size on how the VIT learning")
-    # _plot_and_save_history(history_cnn, filepath=FIG_DIRPATH/"learning_curve_wrt_ds_size-CNN.png", # type: ignore
-    #                        title="Impact of the dataset size on how the CNN learning")
     _plot_comparison_learning_curves(history_1=history_vit, history_2=history_cnn,
                                      title_1="Learning curve for VIT", title_2="Learning curve for CNN",
                                      filepath=FIG_DIRPATH/"learning_curve_comparison.png") # type: ignore
