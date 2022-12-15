@@ -23,10 +23,14 @@ Tensorflow implementation of Image Classification with Vision Transformer on the
    python train_CNN.py
    ```
 
-4. To generate the figures from the report, run
+4. To generate the figures from the report, run:
+
+   ```bash
+   python experiments/impact_of_ds_size.py
+   ```
 
 
 
 ## Acknowledgments
 
-Note that our VIT architecture is following the one from *An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale, Dosovitskiy, 2021*. I also used some lines of codes from the [Keras website](https://keras.io/examples/vision/image_classification_with_vision_transformer/).
+Note that our VIT architecture is the same one as the one presented in *An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale, Dosovitskiy, 2021*. Some lines of codes were taken from the [Keras tutorial on "Image classification with Vision Transformer"](https://keras.io/examples/vision/image_classification_with_vision_transformer/).
