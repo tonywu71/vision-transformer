@@ -38,7 +38,7 @@ def _plot_and_save_history(history_per_n_examples: Dict[int, List[int]], filepat
     if title is None:
         title = "Learning curve"
     df.plot(ax=ax, xlabel="Epochs", ylabel="Validation loss (cross-entropy)", title=title, legend=False)
-    ax.legend("Trainset size")
+    ax.legend(title="Trainset size")
     
     fig.suptitle("Impact of the number of examples in the train set on model performance")
     fig.tight_layout()
